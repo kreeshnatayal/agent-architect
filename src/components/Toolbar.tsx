@@ -12,10 +12,23 @@ import {
   GlobeAltIcon,
   WrenchScrewdriverIcon,
   CodeBracketSquareIcon,
+  // Flowchart specific icons
+  RectangleStackIcon,
+  ChatBubbleBottomCenterTextIcon, // For Data/IO
+  ChevronUpDownIcon, // For Decision
+  StopCircleIcon, // For Terminator
+  ArrowPathIcon, // For Connector/Loop
 } from '@heroicons/react/24/outline';
 import { Node, Edge } from 'reactflow'; // Node and Edge are already here
 
 const icons = [
+  // Flowchart Elements
+  { type: 'process', icon: RectangleStackIcon, label: 'Process' },
+  { type: 'decision', icon: ChevronUpDownIcon, label: 'Decision' },
+  { type: 'terminator', icon: StopCircleIcon, label: 'Terminator' },
+  { type: 'data', icon: ChatBubbleBottomCenterTextIcon, label: 'Data (I/O)' },
+  { type: 'connector', icon: ArrowPathIcon, label: 'Connector' },
+
   // Infrastructure & Cloud
   { type: 'aws', icon: CloudIcon, label: 'AWS' },
   { type: 'azure', icon: CloudIcon, label: 'Azure' },
@@ -172,31 +185,37 @@ export function Toolbar({ nodes, edges }: ToolbarProps) {
   };
 
   return (
-    <div className="absolute top-4 left-4 z-10 flex flex-col gap-4">
+    // Use theme colors and improve layout
+    <div className="flex flex-col gap-4 h-full">
       {/* Toolbar Container */}
-      <div className="bg-white p-4 rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
-        <div className="flex flex-col gap-4">
+      {/* Use primary color for background, ensure text is light (foreground) */}
+      <div className="bg-primary p-4 rounded-lg shadow-xl max-h-[calc(100vh-12rem)] overflow-y-auto">
+        <div className="flex flex-col gap-3">
           {icons.map(({ type, icon: Icon, label }) => (
             <div
               key={type}
-              className="flex items-center gap-2 p-2 border rounded cursor-move hover:bg-blue-50"
+              // Use secondary for item background, accent for hover, ensure text is foreground
+              className="flex items-center gap-3 p-3 border border-secondary rounded-md cursor-move hover:bg-accent hover:text-white transition-colors duration-150"
               draggable
               onDragStart={(e) => onDragStart(e, type)}
             >
-              <Icon className="w-6 h-6 text-black" />
-              <span className="text-black font-medium">{label}</span>
+              {/* Icon color should be foreground, changes to white on hover if item text does */}
+              <Icon className="w-5 h-5 text-foreground" />
+              <span className="text-foreground font-medium text-sm">{label}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Buttons Container */}
-      <div className="bg-white p-4 rounded-lg shadow-lg flex flex-col gap-2">
+      {/* Use primary color for background, ensure text is light (foreground) */}
+      <div className="bg-primary p-4 rounded-lg shadow-xl flex flex-col gap-3 mt-auto">
         <button
           onClick={handleSave}
           disabled={isSaving || isNavigating}
-          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
-            (isSaving || isNavigating) ? 'opacity-50 cursor-not-allowed' : ''
+          // Use accent for button, ensure text is light, add more padding and rounded corners
+          className={`px-5 py-3 bg-accent text-white rounded-md hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
+            (isSaving || isNavigating) ? 'opacity-60 cursor-not-allowed' : ''
           }`}
         >
           {isSaving ? 'Saving...' : 'Export as UML'}
@@ -204,8 +223,9 @@ export function Toolbar({ nodes, edges }: ToolbarProps) {
         <button
           onClick={handleGoToChat}
           disabled={isNavigating || isSaving}
-          className={`px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
-            (isNavigating || isSaving) ? 'opacity-50 cursor-not-allowed' : ''
+          // Use a different color for the second button (e.g. secondary), ensure text is light
+          className={`px-5 py-3 bg-secondary text-white rounded-md hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-opacity-50 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
+            (isNavigating || isSaving) ? 'opacity-60 cursor-not-allowed' : ''
           }`}
         >
           {isNavigating ? 'Processing...' : 'Go to Chat'}
@@ -213,4 +233,4 @@ export function Toolbar({ nodes, edges }: ToolbarProps) {
       </div>
     </div>
   );
-} 
+}

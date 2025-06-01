@@ -126,33 +126,38 @@ function Flow() {
   );
 
   return (
-    <div className="h-full w-full relative">
-      <Toolbar nodes={nodes} edges={edges} />
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onEdgeClick={onEdgeClick}
-        onPaneClick={onPaneClick}
-        defaultEdgeOptions={defaultEdgeOptions}
-        fitView
-        className="bg-gray-50"
-      >
-        <Background />
-        <Controls />
-      </ReactFlow>
+    <div className="flex h-screen w-screen"> {/* Use flexbox for two-column layout */}
+      <div className="w-1/4 p-4 border-r border-gray-700 overflow-y-auto"> {/* Toolbar container */}
+        <Toolbar nodes={nodes} edges={edges} />
+      </div>
+      <div className="w-3/4 h-full"> {/* ReactFlow container */}
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onEdgeClick={onEdgeClick}
+          onPaneClick={onPaneClick}
+          defaultEdgeOptions={defaultEdgeOptions}
+          fitView
+          className="bg-background" // Use background color from CSS variables
+        >
+          <Background />
+          <Controls />
+        </ReactFlow>
+      </div>
     </div>
   );
 }
 
 export default function Home() {
   return (
-    <main className="h-screen w-screen">
+    // Ensure main tag takes full screen and uses new background
+    <main className="h-screen w-screen bg-background text-foreground">
       <ReactFlowProvider>
         <Flow />
       </ReactFlowProvider>

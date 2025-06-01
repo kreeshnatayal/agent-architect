@@ -1,59 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1a1a2e; /* Dark blue background */
+  --foreground: #e0e0e0; /* Light gray text */
+  --primary: #0f3460; /* Darker blue for accents */
+  --secondary: #537895; /* Lighter blue for accents */
+  --accent: #e94560; /* Contrasting accent color (e.g., for buttons or highlights) */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: 'Inter', sans-serif; /* Modern sans-serif font */
+  --font-mono: 'Fira Code', monospace; /* Modern monospace font */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  overflow: hidden; /* Prevent body scrollbars when flowchart is full screen */
 }
 
 /* Custom Scrollbar Styles for Webkit Browsers */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--primary); /* Scrollbar track color */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c7c7c7;
+  background: var(--secondary); /* Scrollbar thumb color */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a3a3a3;
-}
-
-/* Dark mode scrollbar styles */
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background: #2d2d2d;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #555;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #777;
-  }
+  background: var(--accent); /* Scrollbar thumb hover color */
 }
