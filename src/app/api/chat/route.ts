@@ -10,6 +10,10 @@ interface ChatResponse {
   error?: string;
 }
 
+const LYZR_API_KEY = 'sk-default-S07yMhrN5vZuvqEojVskHxY9S8C9TQWh';
+const LYZR_AGENT_ID = '683c8ebb9bef0c4bbc19723f';
+const LYZR_SESSION_ID = '683c8ebb9bef0c4bbc19723f-eiz4tvj7lrp';
+
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { message, uml }: ChatRequest = await request.json();
@@ -21,18 +25,35 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    // Here you would typically:
-    // 1. Process the message and UML (if available)
-    // 2. Get a response from your AI service
+    // Prepare the message for Lyzr AI
+    const fullMessage = uml 
+      ? `Here's my UML diagram:\n\n${uml}\n\nAnd here's my question: ${message}`
+      : message;
 
-    // For now, we'll return a mock response
-    const response: ChatResponse = {
-      response: uml 
-        ? `I've analyzed your message and UML diagram:\n\nMessage: "${message}"\n\nUML Diagram:\n${uml}\n\nHere's what I found...`
-        : `I've processed your message: "${message}". How can I help you further?`,
-    };
+    // Call Lyzr AI API
+    const response = await fetch('https://agent-prod.studio.lyzr.ai/v3/inference/chat/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': LYZR_API_KEY,
+      },
+      body: JSON.stringify({
+        user_id: 'mehulj4751@gmail.com',
+        agent_id: LYZR_AGENT_ID,
+        session_id: LYZR_SESSION_ID,
+        message: fullMessage,
+      }),
+    });
 
-    return NextResponse.json(response);
+    if (!response.ok) {
+      throw new Error('Failed to get response from Lyzr AI');
+    }
+
+    const data = await response.json();
+    
+    return NextResponse.json({
+      response: data.response || 'Sorry, I could not process your request.',
+    });
   } catch (error) {
     console.error('Error processing chat request:', error);
     return NextResponse.json(
