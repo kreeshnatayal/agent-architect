@@ -1,4 +1,6 @@
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { generateUmlFromFlow } from './Flow';
 import {
   ServerIcon,
   CodeBracketIcon,
@@ -11,7 +13,7 @@ import {
   WrenchScrewdriverIcon,
   CodeBracketSquareIcon,
 } from '@heroicons/react/24/outline';
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from 'reactflow'; // Node and Edge are already here
 
 const icons = [
   // Infrastructure & Cloud
@@ -76,6 +78,8 @@ interface ToolbarProps {
 
 export function Toolbar({ nodes, edges }: ToolbarProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const router = useRouter();
 
   const onDragStart = useCallback(
     (event: React.DragEvent, nodeType: string) => {
@@ -146,6 +150,27 @@ export function Toolbar({ nodes, edges }: ToolbarProps) {
     }
   };
 
+  const handleGoToChat = async () => {
+    setIsNavigating(true);
+    try {
+      const uml = generateUmlFromFlow(nodes, edges); // Using the new function
+      const response = await fetch('/api/save-uml', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uml }), // Sending the new UML format
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save UML for chat');
+      }
+      router.push('/chat');
+    } catch (error) {
+      console.error('Error saving UML and navigating to chat:', error);
+      alert('Failed to save UML and navigate. Please try again.');
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
   return (
     <div className="absolute top-4 left-4 z-10 flex flex-col gap-4">
       {/* Toolbar Container */}
@@ -165,16 +190,25 @@ export function Toolbar({ nodes, edges }: ToolbarProps) {
         </div>
       </div>
 
-      {/* Save Button Container */}
-      <div className="bg-white p-4 rounded-lg shadow-lg">
+      {/* Buttons Container */}
+      <div className="bg-white p-4 rounded-lg shadow-lg flex flex-col gap-2">
         <button
           onClick={handleSave}
-          disabled={isSaving}
+          disabled={isSaving || isNavigating}
           className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
-            isSaving ? 'opacity-50 cursor-not-allowed' : ''
+            (isSaving || isNavigating) ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
           {isSaving ? 'Saving...' : 'Export as UML'}
+        </button>
+        <button
+          onClick={handleGoToChat}
+          disabled={isNavigating || isSaving}
+          className={`px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
+            (isNavigating || isSaving) ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {isNavigating ? 'Processing...' : 'Go to Chat'}
         </button>
       </div>
     </div>
