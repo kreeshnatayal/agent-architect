@@ -131,4 +131,22 @@ export function Flow() {
       </ReactFlow>
     </div>
   );
-} 
+}
+
+export const generateUmlFromFlow = (nodes: Node[], edges: Edge[]): string => {
+  let umlString = "Nodes:\n";
+  nodes.forEach(node => {
+    umlString += `- ${node.data.label} (Type: ${node.data.type})\n`;
+  });
+
+  umlString += "\nEdges:\n";
+  edges.forEach(edge => {
+    const sourceNode = nodes.find(node => node.id === edge.source);
+    const targetNode = nodes.find(node => node.id === edge.target);
+    if (sourceNode && targetNode) {
+      umlString += `- ${sourceNode.data.label} -> ${targetNode.data.label}\n`;
+    }
+  });
+
+  return umlString;
+};

@@ -26,8 +26,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     // Prepare the message for Lyzr AI
-    const fullMessage = uml 
-      ? `Here's my UML diagram:\n\n${uml}\n\nAnd here's my question: ${message}`
+    const fullMessage = uml
+      ? `${message}\n\nUML:\n${uml}`
       : message;
 
     // Call Lyzr AI API
