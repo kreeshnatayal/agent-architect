@@ -144,7 +144,9 @@ export default function ChatPage() {
                   : 'bg-white text-gray-800'
               }`}
             >
-              <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none text-inherit">{message.text}</ReactMarkdown>
+              <div className="prose prose-sm max-w-none text-inherit">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
