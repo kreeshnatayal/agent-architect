@@ -14,8 +14,10 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 
+type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+
 // Map node types to their corresponding icons
-const iconMap: { [key: string]: any } = {
+const iconMap: Record<string, IconComponent> = {
   // Infrastructure & Cloud
   aws: CloudIcon,
   azure: CloudIcon,
@@ -71,7 +73,7 @@ export function CustomNode({ data, id }: CustomNodeProps) {
 
   const onDelete = (event: React.MouseEvent) => {
     event.stopPropagation();
-    // @ts-ignore - ReactFlow types are not properly exposed
+    // @ts-expect-error - ReactFlow instance is exposed to window for node deletion
     const reactFlowInstance = window.reactFlowInstance;
     if (reactFlowInstance) {
       reactFlowInstance.deleteElements({ nodes: [{ id }] });

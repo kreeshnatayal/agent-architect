@@ -1,60 +1,49 @@
 import { useCallback, useState } from 'react';
 import {
   ServerIcon,
-  CubeIcon,
   CodeBracketIcon,
   CircleStackIcon,
   CloudIcon,
   CommandLineIcon,
   BeakerIcon,
-  CommandLineIcon as TerminalIcon,
   CpuChipIcon,
   GlobeAltIcon,
   WrenchScrewdriverIcon,
   CodeBracketSquareIcon,
-  CircleStackIcon as DatabaseIcon,
-  CloudIcon as CloudServiceIcon,
-  CommandLineIcon as ShellIcon,
-  ServerIcon as ServerIcon2,
-  CubeIcon as ContainerIcon,
-  CodeBracketIcon as CodeIcon,
-  CircleStackIcon as DataIcon,
-  CloudIcon as CloudIcon2,
-  CommandLineIcon as CliIcon,
 } from '@heroicons/react/24/outline';
 
 const icons = [
   // Infrastructure & Cloud
-  { type: 'aws', icon: CloudServiceIcon, label: 'AWS' },
-  { type: 'azure', icon: CloudServiceIcon, label: 'Azure' },
-  { type: 'gcp', icon: CloudServiceIcon, label: 'GCP' },
-  { type: 'kubernetes', icon: ContainerIcon, label: 'Kubernetes' },
-  { type: 'docker', icon: ContainerIcon, label: 'Docker' },
+  { type: 'aws', icon: CloudIcon, label: 'AWS' },
+  { type: 'azure', icon: CloudIcon, label: 'Azure' },
+  { type: 'gcp', icon: CloudIcon, label: 'GCP' },
+  { type: 'kubernetes', icon: CommandLineIcon, label: 'Kubernetes' },
+  { type: 'docker', icon: CommandLineIcon, label: 'Docker' },
   { type: 'jenkins', icon: ServerIcon, label: 'Jenkins' },
   { type: 'git', icon: CodeBracketSquareIcon, label: 'Git' },
   { type: 'github', icon: CodeBracketSquareIcon, label: 'GitHub' },
   { type: 'gitlab', icon: CodeBracketSquareIcon, label: 'GitLab' },
   
   // Languages & Frameworks
-  { type: 'python', icon: CodeIcon, label: 'Python' },
-  { type: 'java', icon: CodeIcon, label: 'Java' },
-  { type: 'cpp', icon: CodeIcon, label: 'C++' },
-  { type: 'javascript', icon: CodeIcon, label: 'JavaScript' },
-  { type: 'typescript', icon: CodeIcon, label: 'TypeScript' },
-  { type: 'react', icon: CodeIcon, label: 'React' },
-  { type: 'nextjs', icon: CodeIcon, label: 'Next.js' },
-  { type: 'nodejs', icon: CodeIcon, label: 'Node.js' },
+  { type: 'python', icon: CodeBracketIcon, label: 'Python' },
+  { type: 'java', icon: CodeBracketIcon, label: 'Java' },
+  { type: 'cpp', icon: CodeBracketIcon, label: 'C++' },
+  { type: 'javascript', icon: CodeBracketIcon, label: 'JavaScript' },
+  { type: 'typescript', icon: CodeBracketIcon, label: 'TypeScript' },
+  { type: 'react', icon: CodeBracketIcon, label: 'React' },
+  { type: 'nextjs', icon: CodeBracketIcon, label: 'Next.js' },
+  { type: 'nodejs', icon: CodeBracketIcon, label: 'Node.js' },
   { type: 'flask', icon: BeakerIcon, label: 'Flask' },
-  { type: 'springboot', icon: CodeIcon, label: 'Spring Boot' },
+  { type: 'springboot', icon: CodeBracketIcon, label: 'Spring Boot' },
   
   // Databases & Storage
-  { type: 'mongodb', icon: DatabaseIcon, label: 'MongoDB' },
-  { type: 'postgresql', icon: DatabaseIcon, label: 'PostgreSQL' },
-  { type: 'mysql', icon: DatabaseIcon, label: 'MySQL' },
-  { type: 'redis', icon: DatabaseIcon, label: 'Redis' },
+  { type: 'mongodb', icon: CircleStackIcon, label: 'MongoDB' },
+  { type: 'postgresql', icon: CircleStackIcon, label: 'PostgreSQL' },
+  { type: 'mysql', icon: CircleStackIcon, label: 'MySQL' },
+  { type: 'redis', icon: CircleStackIcon, label: 'Redis' },
   
   // DevOps & Tools
-  { type: 'linux', icon: TerminalIcon, label: 'Linux' },
+  { type: 'linux', icon: CommandLineIcon, label: 'Linux' },
   { type: 'nginx', icon: ServerIcon, label: 'Nginx' },
   { type: 'apache', icon: ServerIcon, label: 'Apache' },
   { type: 'terraform', icon: WrenchScrewdriverIcon, label: 'Terraform' },
@@ -63,14 +52,10 @@ const icons = [
   // Monitoring & Logging
   { type: 'prometheus', icon: CpuChipIcon, label: 'Prometheus' },
   { type: 'grafana', icon: GlobeAltIcon, label: 'Grafana' },
-  { type: 'elk', icon: DataIcon, label: 'ELK Stack' },
+  { type: 'elk', icon: CircleStackIcon, label: 'ELK Stack' },
 ];
 
-interface ToolbarProps {
-  onSave: () => void;
-}
-
-export function Toolbar({ onSave }: ToolbarProps) {
+export function Toolbar() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
@@ -87,7 +72,7 @@ export function Toolbar({ onSave }: ToolbarProps) {
       setIsSaving(true);
       setSaveMessage('');
 
-      // @ts-ignore - ReactFlow types are not properly exposed
+      // @ts-expect-error - ReactFlow instance is exposed to window for saving
       const reactFlowInstance = window.reactFlowInstance;
       if (!reactFlowInstance) {
         throw new Error('Flow instance not found');

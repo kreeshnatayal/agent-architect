@@ -1,8 +1,8 @@
-import { ReactFlow, Background, Controls, Panel, useNodesState, useEdgesState, Edge, MarkerType } from 'reactflow';
+import { ReactFlow, Background, useNodesState, useEdgesState, Edge, MarkerType, Connection, ReactFlowInstance, Node } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { CustomNode } from './CustomNode';
-import { ToolPanel } from './ToolPanel';
 import { useState } from 'react';
+
 
 const nodeTypes = {
   custom: CustomNode,
@@ -63,11 +63,15 @@ const initialEdges: Edge[] = [
 export function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-  const onConnect = (params: any) => {
-    const newEdge = {
-      ...params,
+  const onConnect = (params: Connection) => {
+    if (!params.source || !params.target) return;
+    
+    const newEdge: Edge = {
+      id: `e${params.source}-${params.target}`,
+      source: params.source,
+      target: params.target,
       type: 'smoothstep',
       animated: true,
       markerEnd: {
@@ -90,14 +94,14 @@ export function Flow() {
     event.preventDefault();
 
     const type = event.dataTransfer.getData('application/reactflow');
-    if (!type) return;
+    if (!type || !reactFlowInstance) return;
 
     const position = reactFlowInstance.screenToFlowPosition({
       x: event.clientX,
       y: event.clientY,
     });
 
-    const newNode = {
+    const newNode: Node = {
       id: `${nodes.length + 1}`,
       type: 'custom',
       position,
@@ -123,10 +127,7 @@ export function Flow() {
         className="bg-gray-50"
       >
         <Background color="#94a3b8" gap={16} size={1} />
-        <Controls className="bg-white shadow-lg rounded-lg p-1" />
-        <Panel position="top-left" className="bg-white shadow-lg rounded-lg p-4">
-          <ToolPanel />
-        </Panel>
+        
       </ReactFlow>
     </div>
   );

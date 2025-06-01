@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import ReactFlow, {
   Controls,
   Background,
@@ -47,7 +47,7 @@ function Flow() {
 
   useEffect(() => {
     // Expose ReactFlow instance to window for node deletion
-    // @ts-ignore
+    // @ts-expect-error - ReactFlow instance needs to be exposed to window for node deletion
     window.reactFlowInstance = reactFlowInstance;
   }, [reactFlowInstance]);
 
@@ -125,34 +125,9 @@ function Flow() {
     [nodes, setNodes, reactFlowInstance]
   );
 
-  const onSave = async () => {
-    try {
-      const response = await fetch('/api/flowcharts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: 'My Flowchart',
-          nodes,
-          edges,
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to save flowchart');
-      }
-      
-      alert('Flowchart saved successfully!');
-    } catch (error) {
-      console.error('Error saving flowchart:', error);
-      alert('Failed to save flowchart');
-    }
-  };
-
   return (
     <div className="h-full w-full relative">
-        <Toolbar onSave={onSave} />
+        <Toolbar />
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -160,13 +135,13 @@ function Flow() {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        onEdgeClick={onEdgeClick}
-        onPaneClick={onPaneClick}
-        defaultEdgeOptions={defaultEdgeOptions}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onEdgeClick={onEdgeClick}
+          onPaneClick={onPaneClick}
+          defaultEdgeOptions={defaultEdgeOptions}
           fitView
-        className="bg-gray-50"
+          className="bg-gray-50"
         >
           <Background />
           <Controls />
