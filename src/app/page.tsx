@@ -127,26 +127,26 @@ function Flow() {
 
   return (
     <div className="h-full w-full relative">
-        <Toolbar />
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          nodeTypes={nodeTypes}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          onEdgeClick={onEdgeClick}
-          onPaneClick={onPaneClick}
-          defaultEdgeOptions={defaultEdgeOptions}
-          fitView
-          className="bg-gray-50"
-        >
-          <Background />
-          <Controls />
-        </ReactFlow>
-      </div>
+      <Toolbar nodes={nodes} edges={edges} />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onEdgeClick={onEdgeClick}
+        onPaneClick={onPaneClick}
+        defaultEdgeOptions={defaultEdgeOptions}
+        fitView
+        className="bg-gray-50"
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 }
 
