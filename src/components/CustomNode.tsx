@@ -12,12 +12,25 @@ import {
   WrenchScrewdriverIcon,
   CodeBracketSquareIcon,
   XMarkIcon,
+  // Flowchart specific icons from Toolbar
+  RectangleStackIcon,
+  ChatBubbleBottomCenterTextIcon,
+  ChevronUpDownIcon,
+  StopCircleIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
 type IconComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 // Map node types to their corresponding icons
 const iconMap: Record<string, IconComponent> = {
+  // Flowchart Elements
+  process: RectangleStackIcon,
+  decision: ChevronUpDownIcon,
+  terminator: StopCircleIcon,
+  data: ChatBubbleBottomCenterTextIcon,
+  connector: ArrowPathIcon,
+
   // Infrastructure & Cloud
   aws: CloudIcon,
   azure: CloudIcon,
@@ -81,32 +94,39 @@ export function CustomNode({ data, id }: CustomNodeProps) {
   };
 
   return (
-    <div className="px-4 py-3 shadow-lg rounded-lg bg-white border border-gray-200 hover:shadow-xl transition-shadow duration-200">
+    // Use theme colors: primary for background, secondary for border, foreground for text
+    <div className="px-4 py-3 shadow-lg rounded-lg bg-primary border border-secondary hover:shadow-xl transition-shadow duration-200">
       <Handle
         type="target"
         position={Position.Top}
-        className="w-3 h-3 !bg-blue-500 hover:!bg-blue-600 transition-colors duration-200"
+        // Use accent color for handles
+        className="w-3 h-3 !bg-accent hover:!bg-opacity-80 transition-colors duration-200"
         style={{ top: -6 }}
       />
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-blue-50 rounded-lg">
-          <Icon className="w-6 h-6 text-blue-600" />
+        {/* Use secondary for icon background, accent for icon color */}
+        <div className="p-2 bg-secondary rounded-lg">
+          <Icon className="w-6 h-6 text-accent" />
         </div>
-        <div className="text-sm font-medium text-gray-700">{data.label}</div>
+        {/* Text color should be foreground */}
+        <div className="text-sm font-medium text-foreground">{data.label}</div>
         <button
           onClick={onDelete}
-          className="ml-2 p-1.5 rounded-full hover:bg-red-50 transition-colors duration-200"
+          // Use a subtle hover background, accent for icon hover
+          className="ml-auto p-1.5 rounded-full hover:bg-secondary transition-colors duration-200"
           title="Delete node"
         >
-          <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500" />
+          {/* Icon color foreground, hover accent */}
+          <XMarkIcon className="w-4 h-4 text-foreground hover:text-accent" />
         </button>
       </div>
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 !bg-blue-500 hover:!bg-blue-600 transition-colors duration-200"
+        // Use accent color for handles
+        className="w-3 h-3 !bg-accent hover:!bg-opacity-80 transition-colors duration-200"
         style={{ bottom: -6 }}
       />
     </div>
   );
-} 
+}
