@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   id: number;
@@ -20,6 +22,18 @@ export default function ChatPage() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [latestUML, setLatestUML] = useState<string | null>(null);
+
+  const commonWorkflows = [
+    "Explain this code",
+    "Suggest improvements for this function",
+    "Write a unit test for this code",
+    "Generate a sequence diagram for this interaction",
+    "Create a class diagram based on these models",
+  ];
+
+  const handleWorkflowClick = (workflowText: string) => {
+    setInputMessage(workflowText);
+  };
 
   useEffect(() => {
     // Fetch the latest UML when the component mounts
@@ -92,15 +106,15 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
-      <div className="p-4 bg-white border-b">
+    <div className="flex flex-col h-screen bg-gray-50">
+      <div className="p-4 bg-white border-b shadow-sm">
         <button
           onClick={() => router.back()}
-          className="flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200 hover:scale-105 transform cursor-pointer"
+          className="flex items-center text-gray-700 hover:text-blue-600 transition-colors duration-200 hover:bg-gray-100 p-2 rounded-lg"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 mr-2"
+            className="h-5 w-5 mr-2"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -115,7 +129,7 @@ export default function ChatPage() {
           Back
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -124,48 +138,72 @@ export default function ChatPage() {
             }`}
           >
             <div
-              className={`max-w-[70%] rounded-lg p-3 ${
+              className={`max-w-[75%] rounded-xl p-4 shadow-md ${
                 message.sender === 'user'
-                  ? 'bg-blue-500 text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-800'
               }`}
             >
-              {message.text}
+              <div className="prose prose-sm max-w-none text-inherit">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white text-gray-800 rounded-lg p-3">
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            <div className="bg-gray-200 text-gray-700 rounded-xl p-4 shadow-md">
+              <div className="flex items-center space-x-2">
+                <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce"></div>
+                <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                <span className="text-sm">AI is thinking...</span>
               </div>
             </div>
           </div>
         )}
       </div>
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-white">
-        <div className="flex space-x-2 justify-center">
+      <div className="px-6 pb-3 pt-2 bg-gray-100 border-t">
+        <h3 className="text-sm text-gray-600 mb-2 font-medium">Common Workflows:</h3>
+        <div className="flex flex-wrap gap-2">
+          {commonWorkflows.map((workflow, index) => (
+            <button
+              key={index}
+              onClick={() => handleWorkflowClick(workflow)}
+              className="bg-gray-200 text-gray-700 hover:bg-gray-300/80 text-xs px-3 py-1.5 rounded-full cursor-pointer transition-colors duration-150 shadow-sm active:bg-gray-300"
+            >
+              {workflow}
+            </button>
+          ))}
+        </div>
+      </div>
+      <form onSubmit={handleSendMessage} className="p-6 pt-3 bg-gray-100 shadow-inner">
+        <div className="flex items-center space-x-3">
           <input
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="w-[80%] p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-blue-600 placeholder-gray-400"
+            placeholder="Ask the AI to generate or modify a UML diagram, or type your message..."
+            className="flex-grow p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 placeholder-gray-500 transition-shadow duration-200 focus:shadow-md"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 hover:scale-105 transform hover:shadow-lg cursor-pointer ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            className={`px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg ${
+              isLoading ? 'opacity-60 cursor-not-allowed' : ''
             }`}
           >
-            Send
+            {isLoading ? (
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              'Send'
+            )}
           </button>
         </div>
       </form>
     </div>
   );
-} 
+}
