@@ -10,9 +10,9 @@ interface ChatResponse {
   error?: string;
 }
 
-const LYZR_API_KEY = 'sk-default-S07yMhrN5vZuvqEojVskHxY9S8C9TQWh';
-const LYZR_AGENT_ID = '683c8ebb9bef0c4bbc19723f';
-const LYZR_SESSION_ID = '683c8ebb9bef0c4bbc19723f-eiz4tvj7lrp';
+const LYZR_API_KEY = 'sk-default-efJlWrM2zBnfadNhcqx97S3dd45Pyk4B';
+const LYZR_AGENT_ID = '683ca3483b7c57f1745cf7f0';
+const LYZR_SESSION_ID = '683ca3483b7c57f1745cf7f0-vugolvc9kgr';
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -38,7 +38,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         'x-api-key': LYZR_API_KEY,
       },
       body: JSON.stringify({
-        user_id: 'mehulj4751@gmail.com',
+        user_id: 'ktayal0903@gmail.com',
         agent_id: LYZR_AGENT_ID,
         session_id: LYZR_SESSION_ID,
         message: fullMessage,
